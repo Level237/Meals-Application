@@ -175,12 +175,12 @@ ul {
   max-width:var(--max-width);
   margin:0 auto; 
   display:grid;
-  gab:2 rem;
+  gap:2rem;
 }
 
 @media screen and (min-width:776px){
   .section-center{
-    grid-template-columns:1fr 1fr 1fr;
+    grid-template-columns:1fr 1fr;
   }
 }
 
