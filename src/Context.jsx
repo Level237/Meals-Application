@@ -3,7 +3,7 @@ import axios from 'axios';
 const AppContext=React.createContext();
 
 const allMealsUrl='https://www.themealdb.com/api/json/v1/1/search.php?s=a';
-const randomMealsUrl='www.themealdb.com/api/json/v1/1/random.php';
+const randomMealsUrl='https://www.themealdb.com/api/json/v1/1/random.php';
 
 const AppProvider=({children})=>{
 
@@ -28,11 +28,16 @@ const AppProvider=({children})=>{
       }
        setLoading(false);
     }
+
+  const fetchRandomMeal=()=>{
+    fetchMeals(randomMealsUrl);
+    console.log(fetchMeals(randomMealsUrl))
+  }
   useEffect(()=>{
     fetchMeals(`${allMealsUrl}${searchTerm}`);
   },[searchTerm])
   
-  return  <AppContext.Provider value={{loading,meals,setSearchTerm}}>
+  return  <AppContext.Provider value={{loading,meals,setSearchTerm,fetchRandomMeal}}>
     {children}
   </AppContext.Provider>
 }
