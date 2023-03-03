@@ -1,72 +1,87 @@
-import React,{useContext,useEffect,useState} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from 'axios';
-const AppContext=React.createContext();
+const AppContext = React.createContext();
 
-const allMealsUrl='https://www.themealdb.com/api/json/v1/1/search.php?s=a';
-const randomMealsUrl='https://www.themealdb.com/api/json/v1/1/random.php';
+const allMealsUrl = 'https://www.themealdb.com/api/json/v1/1/search.php?s=a';
+const randomMealsUrl = 'https://www.themealdb.com/api/json/v1/1/random.php';
 
-const AppProvider=({children})=>{
+const AppProvider = ({ children }) => {
 
-  
-  const [meals,setMeals]=useState([])
-  const [loading,setLoading]=useState(false);
-  const [searchTerm,setSearchTerm]=useState('');
-  const [showModal,setShowModal]=useState(false); 
-  const [selectedMeal,setSelectedMeal]=useState(null);
 
-  
-    const fetchMeals=async(url)=>{
-      setLoading(true);
-      try {
-        const {data}=await axios(url)
+  const [meals, setMeals] = useState([])
+  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [selectedMeal, setSelectedMeal] = useState(null);
+  const [favorites,setFavorites]=useState([]);
 
-        if(data.meals){
-            setMeals(data.meals);
-        }else{
-          setMeals([]);
-        }
-       
-      } catch (error) {
-        console.log(error);
+  const fetchMeals = async (url) => {
+    setLoading(true);
+    try {
+      const { data } = await axios(url)
+
+      if (data.meals) {
+        setMeals(data.meals);
+      } else {
+        setMeals([]);
       }
-       setLoading(false);
-    }
 
-  const fetchRandomMeal=()=>{
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
+  }
+
+  const fetchRandomMeal = () => {
     fetchMeals(randomMealsUrl);
     console.log(fetchMeals(randomMealsUrl))
   }
 
-  const selectMeal=(idMeal,favoriteMeal)=>{
-    console.log(idMeal);
+  const selectMeal = (idMeal, favoriteMeal) => {
+
     let meal;
-    meal=meals.find((meal)=>meal.idMeal === idMeal)
+    meal = meals.find((meal) => meal.idMeal === idMeal)
     setSelectedMeal(meal)
     setShowModal(true);
   }
 
-  const closeModal=()=>{
+  const closeModal = (idMeal) => {
     setShowModal(false)
   }
 
-    useEffect(()=>{
+  const addToFavorites=(idMeal)=>{
+    console.log(idMeal)
+    const alreadyFavorites= favorites.find((meal)=>meal.idMeal === idMeal);
+    if(alreadyFavorites) return 
+    const meal=meals.find((meal)=>meal.idMeal === idMeal);
+    const updatedFavorites=[...favorites,meal];
+    setFavorites(updatedFavorites)
+    
+  }
+
+   const removeFromFavorites=(idMeal)=>{
+    const updatedFavorites=favorites.filter((meal)=>meal.idMeal !== idMeal);
+     setFavorites(updatedFavorites);
+  }
+
+  useEffect(() => {
 
     fetchMeals(allMealsUrl);
-  },[])
+  }, [])
 
-  
-  useEffect(()=>{
-   if(!searchTerm) return 
+
+  useEffect(() => {
+    if (!searchTerm) return
     fetchMeals(`${allMealsUrl}${searchTerm}`);
-  },[searchTerm])
-  
-  return  <AppContext.Provider value={{loading,meals,setSearchTerm,fetchRandomMeal,showModal,selectedMeal,selectMeal,selectedMeal,closeModal }}>
+  }, [searchTerm])
+
+  return <AppContext.Provider value={{ loading, meals, setSearchTerm, fetchRandomMeal, showModal, selectedMeal, selectMeal, selectedMeal, closeModal,addToFavorites,removeFromFavorites,favorites}}>
     {children}
   </AppContext.Provider>
 }
 
-export const useGloBalContext=()=>{
+export const useGloBalContext = () => {
 
   return useContext(AppContext)
 }
-export {AppContext,AppProvider};
+export { AppContext, AppProvider };
