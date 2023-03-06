@@ -13,7 +13,7 @@ const AppProvider = ({ children }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [selectedMeal, setSelectedMeal] = useState(null);
-  const [favorites,setFavorites]=useState([]);
+  const [favorites, setFavorites] = useState([]);
 
   const fetchMeals = async (url) => {
     setLoading(true);
@@ -40,7 +40,13 @@ const AppProvider = ({ children }) => {
   const selectMeal = (idMeal, favoriteMeal) => {
 
     let meal;
-    meal = meals.find((meal) => meal.idMeal === idMeal)
+    if (favoriteMeal) {
+      meal = favorites.find((meal) => meal.idMeal === idMeal)
+      console.log('lo')
+    }else{
+      meal = meals.find((meal) => meal.idMeal === idMeal)
+    }
+  
     setSelectedMeal(meal)
     setShowModal(true);
   }
@@ -49,19 +55,19 @@ const AppProvider = ({ children }) => {
     setShowModal(false)
   }
 
-  const addToFavorites=(idMeal)=>{
+  const addToFavorites = (idMeal) => {
     console.log(idMeal)
-    const alreadyFavorites= favorites.find((meal)=>meal.idMeal === idMeal);
-    if(alreadyFavorites) return 
-    const meal=meals.find((meal)=>meal.idMeal === idMeal);
-    const updatedFavorites=[...favorites,meal];
+    const alreadyFavorites = favorites.find((meal) => meal.idMeal === idMeal);
+    if (alreadyFavorites) return
+    const meal = meals.find((meal) => meal.idMeal === idMeal);
+    const updatedFavorites = [...favorites, meal];
     setFavorites(updatedFavorites)
-    
+
   }
 
-   const removeFromFavorites=(idMeal)=>{
-    const updatedFavorites=favorites.filter((meal)=>meal.idMeal !== idMeal);
-     setFavorites(updatedFavorites);
+  const removeFromFavorites = (idMeal) => {
+    const updatedFavorites = favorites.filter((meal) => meal.idMeal !== idMeal);
+    setFavorites(updatedFavorites);
   }
 
   useEffect(() => {
@@ -75,7 +81,7 @@ const AppProvider = ({ children }) => {
     fetchMeals(`${allMealsUrl}${searchTerm}`);
   }, [searchTerm])
 
-  return <AppContext.Provider value={{ loading, meals, setSearchTerm, fetchRandomMeal, showModal, selectedMeal, selectMeal, selectedMeal, closeModal,addToFavorites,removeFromFavorites,favorites}}>
+  return <AppContext.Provider value={{ loading, meals, setSearchTerm, fetchRandomMeal, showModal, selectedMeal, selectMeal, selectedMeal, closeModal, addToFavorites, removeFromFavorites, favorites }}>
     {children}
   </AppContext.Provider>
 }

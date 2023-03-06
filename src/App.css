@@ -200,6 +200,48 @@ ul {
   font-size:0.75rem;
 }
 /* Favorites */
+
+.favorites{
+  background:var(--black);
+  color:var(--white);
+  padding:1rem 0;
+}
+.favorites-content{
+  width:var(--view-width);
+  max-width:var(--max-width);
+  margin:0 auto;
+}
+
+.favorites-container{
+  display:flex;
+  gap:0.5rem;
+  flex-wrap:wrap;
+}
+
+.favorites-item{
+  text-align:center; 
+}
+
+.favorites-img{
+  width:60px;
+  border-radius:50%;
+  border:5px solid var(--white);
+  cursor:pointer;
+}
+
+.remove-btn{
+  margin-top:0.25rem;
+  background:transparent;
+  color:var(--white);
+  border:transparent;
+  cursor:pointer;
+  font-size:0.7rem;
+  transition:var(--transition);
+}
+
+.remove-btn:hover{
+  color:var(--red-dark);
+}
 /* Meals */
 
 .section,.section-center{
